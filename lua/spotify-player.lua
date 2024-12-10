@@ -199,32 +199,71 @@ function M.play_track(id)
 	M.cmd({ 'playback', 'start', 'radio', '-i', id, 'track'})
 end
 
---- Searches for a track (interactively).
+--- Starts playing the given artist.
+function M.play_artist(id)
+	M.cmd({ 'playback', 'start', 'context', '-i', id, 'artist'})
+end
+
+--- Starts playing the given album.
+function M.play_album(id)
+	M.cmd({ 'playback', 'start', 'context', '-i', id, 'album'})
+end
+
+--- Opens a select for tracks matching a query.
+function M.select_track(query, cb)
+	local result = M.search(query)
+	local opts = { format_item = function(track)
+		return track.name .. " by " .. track.artists[1].name
+	end }
+	vim.ui.select(result.tracks, opts, cb)
+end
+
+--- Opens a select for artists matching a query.
+function M.select_artist(query, cb)
+	local result = M.search(query)
+	local opts = { format_item = function(artist)
+		return artist.name
+	end }
+	vim.ui.select(result.artists, opts, cb)
+end
+
+--- Opens a select for albums matching a query.
+function M.select_album(query, cb)
+	local result = M.search(query)
+	local opts = { format_item = function(album)
+		return album.name .. " by " .. album.artists[1].name
+	end }
+	vim.ui.select(result.albums, opts, cb)
+end
+
+--- Interactively search for a track.
 function M.search_track(cb)
-	local input = vim.fn.input({ prompt = "Search: " })
+	local input = vim.fn.input({ prompt = "Track: " })
 
-	if input == nil or input == '' then
-		return
+	if input then
+		local player = require("spotify-player")
+		player.select_track(input, cb)
 	end
+end
 
-	local result = require("spotify-player").search(input)
-	local opts = {
-		format_item = function(track)
-			return track.name .. " // " .. track.artists[1].name
-		end
-	}
+--- Interactively search for an artist.
+function M.search_artist(cb)
+	local input = vim.fn.input({ prompt = "Artist: " })
 
-	vim.ui.select(result.tracks, opts, function(track)
-		if track == nil then
-			return
-		end
+	if input then
+		local player = require("spotify-player")
+		player.select_artist(input, cb)
+	end
+end
 
-		M.play_track(track.id)
+--- Interactively search for an album.
+function M.search_album(cb)
+	local input = vim.fn.input({ prompt = "Album: " })
 
-		if cb then
-			cb(track)
-		end
-	end)
+	if input then
+		local player = require("spotify-player")
+		player.select_album(input, cb)
+	end
 end
 
 return M
