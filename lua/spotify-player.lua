@@ -240,7 +240,7 @@ end
 function M.search_track(cb)
 	local input = vim.fn.input({ prompt = "Track: " })
 
-	if input then
+	if input and input ~= '' then
 		local player = require("spotify-player")
 		player.select_track(input, cb)
 	end
@@ -250,7 +250,7 @@ end
 function M.search_artist(cb)
 	local input = vim.fn.input({ prompt = "Artist: " })
 
-	if input then
+	if input and input ~= '' then
 		local player = require("spotify-player")
 		player.select_artist(input, cb)
 	end
@@ -260,7 +260,7 @@ end
 function M.search_album(cb)
 	local input = vim.fn.input({ prompt = "Album: " })
 
-	if input then
+	if input and input ~= '' then
 		local player = require("spotify-player")
 		player.select_album(input, cb)
 	end
