@@ -49,6 +49,17 @@ function M.get_playback()
 	return vim.json.decode(res.stdout)
 end
 
+--- Searches using the given query.
+function M.search(query)
+	local res = M.cmd({ 'search', query })
+
+	if res.code ~= 0 then
+		return nil
+	end
+
+	return vim.json.decode(res.stdout)
+end
+
 --- Returns high-level info about the currently played item.
 function M.get_info()
 	local data = M.get_playback()
@@ -160,7 +171,7 @@ function M.change_volume(offset)
 	M.cmd({ 'playback', 'volume', '--offset', '--', offset })
 end
 
--- Prints a message with info about the current playback.
+--- Prints a message with info about the current playback.
 function M.print_info()
 	local info = M.get_info()
 	local text = ""
@@ -181,6 +192,39 @@ function M.print_info()
 	text = text .. " (volume " .. info.volume .. "%)"
 
 	print(text)
+end
+
+--- Starts a radio from with the given track.
+function M.play_track(id)
+	M.cmd({ 'playback', 'start', 'radio', '-i', id, 'track'})
+end
+
+--- Searches for a track (interactively).
+function M.search_track(cb)
+	local input = vim.fn.input({ prompt = "Search: " })
+
+	if input == nil or input == '' then
+		return
+	end
+
+	local result = require("spotify-player").search(input)
+	local opts = {
+		format_item = function(track)
+			return track.name .. " // " .. track.artists[1].name
+		end
+	}
+
+	vim.ui.select(result.tracks, opts, function(track)
+		if track == nil then
+			return
+		end
+
+		M.play_track(track.id)
+
+		if cb then
+			cb(track)
+		end
+	end)
 end
 
 return M

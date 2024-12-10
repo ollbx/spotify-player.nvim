@@ -44,18 +44,24 @@ local function next()
 	vim.defer_fn(print_info, 1500)
 end
 
+local function search_track()
+	require("spotify-player").search_track(function()
+		vim.defer_fn(print_info, 1500)
+	end)
+end
+
 return {
 	"ollbx/spotify-player.nvim",
 	keys = {
-		{ "<leader>p",  nil,         desc = "Spotify" },
-		{ "<leader>ps", play_pause,  desc = "Play/pause" },
-		{ "<leader>pp", prev,        desc = "Previous track" },
-		{ "<leader>pn", next,        desc = "Next track" },
-		{ "<leader>p+", volume_up,   desc = "Volume up" },
-		{ "<leader>p-", volume_down, desc = "Volume down" },
-		{ "<leader>pl", like,        desc = "Like track" },
-		{ "<leader>pu", unlike,      desc = "Unlike track" },
-		{ "<leader>pi", print_info,  desc = "Show info" },
+		{ "<leader>p",  nil,          desc = "Spotify" },
+		{ "<leader>ps", play_pause,   desc = "Play/pause" },
+		{ "<leader>pp", prev,         desc = "Previous" },
+		{ "<leader>pn", next,         desc = "Next" },
+		{ "<leader>p+", volume_up,    desc = "Volume up" },
+		{ "<leader>p-", volume_down,  desc = "Volume down" },
+		{ "<leader>pl", like,         desc = "Like" },
+		{ "<leader>pu", unlike,       desc = "Unlike" },
+		{ "<leader>pf", search_track, desc = "Find track" },
+		{ "<leader>pi", print_info,   desc = "Show info" },
 	}
 }
-```
