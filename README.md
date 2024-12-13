@@ -29,6 +29,8 @@ return {
 }
 ```
 
+Note: `spotify_player` currently needs to be in `PATH` for the plugin to work.
+
 ## Configuration
 
 ```lua
