@@ -29,3 +29,49 @@ return {
 }
 ```
 
+## Configuration
+
+```lua
+local opts = {
+    notify_cb = function(state)
+        -- Update status bar / notify whatever.
+    end,
+
+    -- If `true`, a state update is automatically requested at the end of the
+    -- currently playing track, in order to trigger `notify_cb(state)`.
+    schedule_update = true,
+}
+```
+
+## API
+
+| Function                   | Description                                                             |
+| -------------------------- | ----------------------------------------------------------------------- |
+| `update_liked(cb)`         | Updates the list of liked tracks. Then calls `cb` with the data.        |
+| `update_state(cb)`         | Updates the state. Then calls `cb` with the new state.                  |
+| `get_liked()`              | Returns the list of liked tracks.                                       |
+| `get_state()`              | Returns the current state.                                              |
+| `trigger_notify()`         | Updates the state and then triggers the notify callback.                |
+| `toggle_like()`            | Enables / disables "like" for the current track.                        |
+| `pause()`                  | Pauses playback.                                                        |
+| `play()`                   | Starts playback.                                                        |
+| `toggle_pause()`           | Toggles between paused and playing state.                               |
+| `next()`                   | Skips to the next track.                                                |
+| `prev()`                   | Skips to the previous track.                                            |
+| `volume(percent)`          | Sets the volume to the given level.                                     |
+| `change_volume(offset)`    | Changes the volume by the given `offset` (positive or negative).        |
+| `toggle_shuffle()`         | Enables / disables shuffle mode.                                        |
+| `cycle_repeat()`           | Cycles between the available repeat modes (off, track, context).        |
+| `search(query, cb)`        | Searches using the given `query`. Calls `cb` with the results.          |
+| `play_track(id)`           | Plays the given track.                                                  |
+| `play_artist(id)`          | Plays the given artist.                                                 |
+| `play_album(id)`           | Plays the given album.                                                  |
+| `search_track(query, cb)`  | Select a track with the given `query`. Calls `cb` with the selection.   |
+|                            | Interactively asks for the query if `query` is `nil`.                   |
+|                            | Plays the track if `cb` is `nil`.                                       |
+| `search_artist(query, cb)` | Select an artist with the given `query`. Calls `cb` with the selection. |
+|                            | Interactively asks for the query if `query` is `nil`.                   |
+|                            | Plays the artist if `cb` is `nil`.                                      |
+| `search_album(query, cb)`  | Select an album with the given `query`. Calls `cb` with the selection.  |
+|                            | Interactively asks for the query if `query` is `nil`.                   |
+|                            | Plays the album if `cb` is `nil`.                                       |

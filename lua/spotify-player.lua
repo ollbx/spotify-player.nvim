@@ -37,7 +37,7 @@ local default_opts = {
 			text = text .. ""
 		end
 
-		text = text .. state:get_title() .. " (by " .. state:get_artist() .. ")"
+		text = text .. state:get_track() .. " (by " .. state:get_artist() .. ")"
 		text = text .. " (volume " .. state:get_volume() .. "%)"
 
 		vim.notify(text)
@@ -353,7 +353,7 @@ function M.cycle_repeat()
 	end)
 end
 
---- Starts a radio from with the given track.
+--- Starts a radio from the given track.
 function M.play_track(id)
 	run_cmd({ 'playback', 'start', 'radio', '-i', id, 'track'}, function()
 		vim.defer_fn(function()

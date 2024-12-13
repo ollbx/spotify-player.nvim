@@ -10,9 +10,11 @@ function State.new(liked, playback)
 	state._volume = playback.device.volume_percent
 	state._position_ms = playback.progress_ms
 	state._duration_ms = playback.item.duration_ms
-	state._title = playback.item.name
+	state._track = playback.item.name
 	state._artist = playback.item.artists[1].name
+	state._artist_id = playback.item.artists[1].id
 	state._album = playback.item.album.name
+	state._album_id = playback.item.album.id
 	state._device = playback.device.name
 	state._is_liked = liked[state._track_id] ~= nil
 	state._repeat_mode = playback.repeat_state
@@ -27,7 +29,7 @@ function State:has_changed(old_state)
 		return true
 	end
 
-	if self:get_title() ~= old_state:get_title() then
+	if self:get_track() ~= old_state:get_title() then
 		return true
 	end
 
@@ -42,50 +44,72 @@ function State:has_changed(old_state)
 	return false
 end
 
+--- Returns the current repeat mode. One of 'off', 'track' or 'context'.
 function State:get_repeat_mode()
 	return self._repeat_mode
 end
 
+--- Returns `true` if shuffle is enabled.
 function State:is_shuffle()
 	return self._is_shuffle
 end
 
+--- Returns the spotify ID of the track.
 function State:get_track_id()
 	return self._track_id
 end
 
-function State:get_title()
-	return self._title
+--- Returns the name of the track.
+function State:get_track()
+	return self._track
 end
 
+--- Returns the name of the artist.
 function State:get_artist()
 	return self._artist
 end
 
+--- Returns the spotify ID of the artist.
+function State:get_artist_id()
+	return self._artist_id
+end
+
+--- Returns the name of the album.
 function State:get_album()
 	return self._album
 end
 
+--- Returns the spotify ID of the album.
+function State:get_album_id()
+	return self._album_id
+end
+
+--- Returns `true` if the music is currently playing.
 function State:is_playing()
 	return self._is_playing
 end
 
+--- Returns `true` if the current track is on the list of liked tracks.
 function State:is_liked()
 	return self._is_liked
 end
 
+--- Returns the current volume.
 function State:get_volume()
 	return self._volume
 end
 
+--- Returns the current playback device.
 function State:get_device()
 	return self._device
 end
 
+--- Returns the time elapsed since the last state update.
 function State:get_elapsed_ms()
 	return vim.uv.now() - self._update_ms
 end
 
+--- Returns the playback position.
 function State:get_position_ms()
 	if self._position_ms == nil then
 		return nil
@@ -98,6 +122,7 @@ function State:get_position_ms()
 	end
 end
 
+--- Returns the playback position in percent.
 function State:get_position_percent()
 	local duration = self:get_duration_ms()
 	local position = self:get_position_ms()
@@ -113,10 +138,12 @@ function State:get_position_percent()
 	end
 end
 
+--- Returns the track duration.
 function State:get_duration_ms()
 	return self._duration_ms
 end
 
+--- Returns the remaining playback time on the track.
 function State:get_remaining_ms()
 	local duration = self:get_duration_ms()
 	local position = self:get_position_ms()
