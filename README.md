@@ -43,6 +43,8 @@ local opts = {
 }
 ```
 
+The default `notify_cb` will call `vim.notify` to show information about the current state / track.
+
 ## API
 
 | Function                   | Description                                                             |
@@ -75,3 +77,25 @@ local opts = {
 | `search_album(query, cb)`  | Select an album with the given `query`. Calls `cb` with the selection.  |
 |                            | Interactively asks for the query if `query` is `nil`.                   |
 |                            | Plays the album if `cb` is `nil`.                                       |
+
+## State API
+
+| Function                       | Description                                            |
+| ------------------------------ | ------------------------------------------------------ |
+| `state:get_repeat_mode()`      | Returns the current repeat mode (off, track, context). |
+| `state:is_shuffle()`           | Returns `true` if shuffle is enabled.                  |
+| `state:is_playing()`           | Returns `true` if music is currently playing.          |
+| `state:is_liked()`             | Returns `true` if the current track is "liked".        |
+| `state:get_track()`            | Returns the name of the current track.                 |
+| `state:get_album()`            | Returns the name of the current album.                 |
+| `state:get_artist()`           | Returns the name of the current artist.                |
+| `state:get_track_id()`         | Returns the spotify ID of the current track.           |
+| `state:get_album_id()`         | Returns the spotify ID of the current album.           |
+| `state:get_artist_id()`        | Returns the spotify ID of the current artist.          |
+| `state:get_volume()`           | Returns the current playback volume in percent.        |
+| `state:get_device()`           | Returns the current playback device.                   |
+| `state:get_elapsed_ms()`       | Returns the time elapsed since the last status update. |
+| `state:get_position_ms()`      | Returns the playback position.                         |
+| `state:get_position_percent()` | Returns the playback position in percent.              |
+| `state:get_duration_ms()`      | Returns the track duration.                            |
+| `state:get_remaining_ms()`     | Returns the remaining time in the current track.       |
