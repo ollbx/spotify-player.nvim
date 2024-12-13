@@ -5,88 +5,27 @@ This is a simple plugin to control [spotify-player](https://github.com/aome510/s
 ## Example setup with lazy.nvim
 
 ```lua
-local function print_info()
-	require("spotify-player").print_info()
-end
-
-local function like()
-	require("spotify-player").like()
-	vim.defer_fn(print_info, 100)
-end
-
-local function unlike()
-	require("spotify-player").unlike()
-	vim.defer_fn(print_info, 100)
-end
-
-local function volume_down()
-	require("spotify-player").change_volume(-10)
-	vim.defer_fn(print_info, 100)
-end
-
-local function volume_up()
-	require("spotify-player").change_volume(10)
-	vim.defer_fn(print_info, 100)
-end
-
-local function play_pause()
-	require("spotify-player").play_pause()
-	vim.defer_fn(print_info, 100)
-end
-
-local function prev()
-	require("spotify-player").prev()
-	vim.defer_fn(print_info, 1500)
-end
-
-local function next()
-	require("spotify-player").next()
-	vim.defer_fn(print_info, 1500)
-end
-
-local function search_track()
-	local p = require("spotify-player");
-	p.search_track(function(track)
-		if track then
-			p.play_track(track.id)
-			vim.defer_fn(print_info, 1500)
-		end
-	end)
-end
-
-local function search_artist()
-	local p = require("spotify-player");
-	p.search_artist(function(artist)
-		if artist then
-			p.play_artist(artist.id)
-			vim.defer_fn(print_info, 1500)
-		end
-	end)
-end
-
-local function search_album()
-	local p = require("spotify-player");
-	p.search_album(function(album)
-		if album then
-			p.play_album(album.id)
-			vim.defer_fn(print_info, 1500)
-		end
-	end)
+local function mod()
+	return require("spotify-player")
 end
 
 return {
 	"ollbx/spotify-player.nvim",
+	opts = {},
 	keys = {
-		{ "<leader>pp",  play_pause,    desc = "Play/pause" },
-		{ "<leader>pr",  prev,          desc = "Previous" },
-		{ "<leader>pn",  next,          desc = "Next" },
-		{ "<leader>p+",  volume_up,     desc = "Volume up" },
-		{ "<leader>p-",  volume_down,   desc = "Volume down" },
-		{ "<leader>pl",  like,          desc = "Like" },
-		{ "<leader>pu",  unlike,        desc = "Unlike" },
-		{ "<leader>pst", search_track,  desc = "Track" },
-		{ "<leader>psa", search_artist, desc = "Artist" },
-		{ "<leader>psl", search_album,  desc = "Album" },
-		{ "<leader>pi",  print_info,    desc = "Show info" },
+		{ "<leader>pp",  function() mod().toggle_pause() end,     desc = "Play/pause" },
+		{ "<leader>pN",  function() mod().prev() end,             desc = "Previous" },
+		{ "<leader>pn",  function() mod().next() end,             desc = "Next" },
+		{ "<leader>p+",  function() mod().change_volume(10) end,  desc = "Volume up" },
+		{ "<leader>p-",  function() mod().change_volume(-10) end, desc = "Volume down" },
+		{ "<leader>pl",  function() mod().toggle_like() end,      desc = "Like" },
+		{ "<leader>ps",  function() mod().toggle_shuffle() end,   desc = "Shuffle" },
+		{ "<leader>pr",  function() mod().cycle_repeat() end,     desc = "Repeat" },
+		{ "<leader>pft", function() mod().search_track() end,     desc = "Track" },
+		{ "<leader>pfa", function() mod().search_artist() end,    desc = "Artist" },
+		{ "<leader>pfl", function() mod().search_album() end,     desc = "Album" },
+		{ "<leader>pi",  function() mod().trigger_notify() end,   desc = "Show info" },
 	}
 }
+```
+
